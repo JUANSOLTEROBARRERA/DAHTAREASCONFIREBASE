@@ -21,21 +21,25 @@
   <ion-row>
     <ion-col>
       <ion-list>
-        <ion-item-sliding *ngFor="let item of tasks; let i=index">
-          <ion-item>
-            <ion-label>{{item}}</ion-label>
-          </ion-item>
-          <ion-item-options side="end" (ionSwipe)="removeTask(i)">
-            <ion-item-option expandable color="danger">
-              <ion-icon name="trash-outline"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-          <ion-item-options side="start" (ionSwipe)="completeTask(i)">
-            <ion-item-option expandable color="success">
-              <ion-icon name="checkmark-outline"></ion-icon>
-            </ion-item-option>
-          </ion-item-options>
-        </ion-item-sliding>
+        <div *ngFor="let item of tasks; let i=index">
+          <div *ngIf="!item.done">
+            <ion-item-sliding>
+              <ion-item>
+                <ion-label>{{item.task}}</ion-label>
+              </ion-item>
+              <ion-item-options side="end" (ionSwipe)="removeTask2(item.id)">
+                <ion-item-option expandable color="danger">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+              <ion-item-options side="start" (ionSwipe)="updateTask(item, item.id)">
+                <ion-item-option expandable color="success">
+                  <ion-icon name="checkmark-outline"></ion-icon>
+                </ion-item-option>
+              </ion-item-options>
+            </ion-item-sliding>
+          </div>
+        </div>
       </ion-list>
     </ion-col>
   </ion-row>

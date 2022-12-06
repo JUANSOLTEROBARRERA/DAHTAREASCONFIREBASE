@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { TasksService } from '../services/tasks.service';
-import { Input,ViewChild } from '@angular/core';
+import { Input, ViewChild } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { Task } from '../models/task';
 
 @Component({
   selector: 'app-tab1',
@@ -9,13 +10,20 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
-  public tasks: string[];
+  public tasks: Task[];
   public task: string;
-  public compTask: string[];
-  @ViewChild('inputTask') myInput  ;
+  public currentTask: Task;
 
-  constructor(private taskService:TasksService) {
-    this.tasks = this.taskService.getTasks();
+  public compTask: string[];
+  @ViewChild('inputTask') myInput;
+
+  constructor(private taskService: TasksService) {
+
+    this.taskService.getTasks().subscribe(res => {
+      this.tasks = res;
+      console.log(this.tasks);
+    });
+
     this.task = "Escribe una tarea"
     this.ionViewLoaded()
   }
@@ -24,27 +32,44 @@ export class Tab1Page {
 
     setTimeout(() => {
       this.myInput.setFocus();
-    },150);
+    }, 150);
 
- }
-
-  public addTask(){
-    this.taskService.addTasks(this.task);
-    this.tasks=this.taskService.getTasks();
-    console.log(this.tasks);
-    this.task="";
   }
 
-  public removeTask(pos:number){
-    this.taskService.removeTask(pos);
-    this.tasks=this.taskService.getTasks();
+  public addTask() {
+
+    this.currentTask = {
+      task: this.task,
+      done: false
+    }
+
+    this.taskService.newTask(this.currentTask);
+
+    //this.taskService.addTasks(this.task);
+    //this.tasks=this.taskService.getTasks();
+    //console.log(this.tasks);
+    //this.task="";
   }
-  
-  public completeTask(pos:number){
-    this.taskService.completeTask(pos);
-    this.tasks=this.taskService.getCompTask();
-    this.taskService.removeTask(pos);
-    this.tasks=this.taskService.getTasks();
- }
+
+  public removeTask(pos: number) {
+    //this.taskService.removeTask(pos);
+    //this.tasks=this.taskService.getTasks();
+  }
+
+  public completeTask(pos: number) {
+    //this.taskService.completeTask(pos);
+    //this.tasks=this.taskService.getCompTask();
+    //this.taskService.removeTask(pos);
+    //.tasks=this.taskService.getTasks();
+  }
+
+  public updateTask(task: Task, id: string) {
+    task.done = true;
+    this.taskService.updateTask(task,id)
+  }
+
+  public removeTask2(id: string){
+    this.taskService.removeTask2(id);
+  }
 
 }
